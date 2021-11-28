@@ -6,6 +6,7 @@ from random import randrange
 
 app = FastAPI()
 
+# the in memory schema
 class Post(BaseModel):
     title: str
     content: str
@@ -68,3 +69,17 @@ def delete_post(id: int):
         detail = f"Post id={id} does not exist")
     my_posts.pop(index)
     return Response(status_code=status.HTTP_204_NO_CONTENT)
+
+
+@app.put("/posts/{id}")
+def update_post(id: int, post: Post):
+    index = find_index_post(id)
+
+    if index == None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+        detail = f"Post id={id} does not exist")
+
+    post_dict = post.dict()
+    post_dict['id'] = id
+    my_posts[index] = post_dict
+    return {'data': post_dict}
