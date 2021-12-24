@@ -1,12 +1,18 @@
 from typing import Optional
-from fastapi import FastAPI, Response, status, HTTPException
+from fastapi import FastAPI, Response, status, HTTPException, Depends
 from fastapi.param_functions import Body
 from pydantic import BaseModel
 from random import randrange
 import psycopg2
 from psycopg2.extras import RealDictCursor
+from .import models
+from .database import engine, get_db
+from sqlalchemy.orm import Session
+
+models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
+
 
 
 # the in memory schema
@@ -76,6 +82,10 @@ def get_post(id: int, response: Response):
         # response.status_code = status.HTTP_404_NOT_FOUND
         # return {'message': f"post with id:{id} was not found."}
     return {"post_detail": post}
+
+@app.get("/sqlalchemy")
+def test_posts(db: Session = Depends(get_db)):
+    return {"status": "success"}
 
 
 @app.delete("/posts/{id}", status_code=status.HTTP_204_NO_CONTENT)
