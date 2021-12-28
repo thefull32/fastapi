@@ -3,7 +3,7 @@ import psycopg2
 from psycopg2.extras import RealDictCursor
 from app import models
 from app.database import engine
-from app.routers import post, user
+from app.routers import post, user, auth
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -40,6 +40,8 @@ def find_index_post(id):
 
 app.include_router(post.router)
 app.include_router(user.router)
+app.include_router(auth.router)
+
 
 @app.get("/")
 def root():
