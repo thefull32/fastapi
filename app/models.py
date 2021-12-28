@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, String, Boolean, text
 from sqlalchemy.dialects.postgresql import TIMESTAMP
 
-from .database import Base
+from app.database import Base
 
 
 class Post(Base):
